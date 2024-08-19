@@ -5,8 +5,24 @@ const PORT = 3000;
 const requestHandler = (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
-    if (req.url === '/api' && req.method === 'GET') {
-        const response = { message: 'Hello, World!' }
+    const url = req.url.split("?")[0];
+
+    if (url === '/api' && req.method === 'GET') {
+        const cars = [
+            { id: 1, brand: 'BMW', model: 'X5' },
+            { id: 2, brand: 'Audi', model: 'Q7' },
+            { id: 3, brand: 'Mercedes', model: 'GLE' }
+        ]
+
+        let idToFind = 1
+
+        if(Boolean(req.url.split("?")[1])) {
+            const idParam =req.url.split("?")[1];
+
+            idToFind = Number(idParam.split("=")[1]);
+        }
+
+        const response = cars.find(car => car.id === idToFind);
 
         res.writeHead(200);
         res.end(JSON.stringify(response));
